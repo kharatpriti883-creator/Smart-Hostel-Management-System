@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Management | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}" class="active"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Hostel Room & Capacity Management</h1>
+          <p>Configure room blocks, bed capacities, occupant lists, and prevent bed over-allocations.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-room-modal')">
+          <i class="fas fa-plus-circle"></i> Add New Hostel Room
+        </button>
+      </div>
+
+      <!-- Rooms Grid View -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;" id="warden-rooms-grid">
+        <p class="text-muted">Loading hostel room capacities...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Room Modal -->
+  <div class="modal-overlay" id="add-room-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeModal('add-room-modal')">&times;</button>
+      <h3 style="margin-bottom:1.25rem;"><i class="fas fa-door-open" style="color:var(--primary);"></i> Add New Hostel Room</h3>
+
+      <div id="room-modal-alert"></div>
+
+      <form id="add-room-form">
+        <div class="form-group">
+          <label for="room_number">Room Number</label>
+          <input type="text" id="room_number" name="room_number" class="form-control" placeholder="e.g. A-105 or B-301" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="block">Hostel Block</label>
+            <select id="block" name="block" class="form-control" required>
+              <option value="Block A">Block A</option>
+              <option value="Block B">Block B</option>
+              <option value="Block C">Block C</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="floor">Floor Level</label>
+            <input type="number" id="floor" name="floor" class="form-control" min="1" max="10" value="1" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="room_type">Room Category</label>
+            <select id="room_type" name="room_type" class="form-control" required>
+              <option value="Standard 4-Sharing">Standard 4-Sharing</option>
+              <option value="Deluxe 2-Sharing">Deluxe 2-Sharing</option>
+              <option value="Single AC Suite">Single AC Suite</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="capacity">Bed Capacity</label>
+            <input type="number" id="capacity" name="capacity" class="form-control" min="1" max="6" value="4" required>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Room to PostgreSQL</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-room-modal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

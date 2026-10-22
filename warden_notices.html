@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Board Manager | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}" class="active"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Hostel Notice Board Manager</h1>
+          <p>Publish official announcements, maintenance schedules, and student guidelines.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-notice-modal')">
+          <i class="fas fa-bullhorn"></i> Publish New Notice
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Published Date</th>
+                <th>Visibility Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="warden-notices-tbody">
+              <tr><td colspan="5" class="text-muted" style="text-align:center;">Loading notices...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Notice Modal -->
+  <div class="modal-overlay" id="add-notice-modal">
+    <div class="modal-card" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('add-notice-modal')">&times;</button>
+      <h3 style="margin-bottom:1.25rem;"><i class="fas fa-bullhorn" style="color:var(--primary);"></i> Publish Hostel Notice</h3>
+
+      <div id="notice-modal-alert"></div>
+
+      <form id="add-notice-form">
+        <div class="form-group">
+          <label for="title">Notice Heading Title</label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Electrical Maintenance Inspection" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Notice Announcement Text</label>
+          <textarea id="description" name="description" class="form-control" rows="4" placeholder="Full announcement text for student dashboard..." required></textarea>
+        </div>
+
+        <div class="form-group" style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="is_active" name="is_active" checked style="width:18px; height:18px;">
+          <label for="is_active" style="margin-bottom:0; font-weight:500;">Publish as Active Notice (Visible on Student Dashboard)</label>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Publish Notice</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-notice-modal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

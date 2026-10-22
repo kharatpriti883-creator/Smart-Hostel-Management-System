@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fee Billing Management | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}" class="active"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Fee Billing & Payment Desk</h1>
+          <p>Track student fee payments, update paid balances, and issue official fee receipts.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Room Allocation</th>
+                <th>Total Term Fee</th>
+                <th>Paid Amount</th>
+                <th>Pending Balance</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="warden-fees-tbody">
+              <tr><td colspan="7" class="text-muted" style="text-align:center;">Loading fee records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Update Fee Modal -->
+  <div class="modal-overlay" id="update-fee-modal">
+    <div class="modal-card" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeModal('update-fee-modal')">&times;</button>
+      <h3 style="margin-bottom:1rem;"><i class="fas fa-edit" style="color:var(--primary);"></i> Record Fee Payment</h3>
+
+      <input type="hidden" id="edit-fee-id">
+      <p style="margin-bottom:1rem;">Student: <strong id="edit-fee-st-name">Student Name</strong></p>
+
+      <div class="form-group">
+        <label for="edit-fee-paid">Updated Total Paid Amount (₹)</label>
+        <input type="number" id="edit-fee-paid" class="form-control" step="500" required>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn btn-primary" onclick="submitFeeUpdate()"><i class="fas fa-save"></i> Save Payment</button>
+        <button class="btn btn-outline" onclick="closeModal('update-fee-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Fee Receipt Shared Modal -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="modal-card printable-area" style="max-width: 650px;">
+      <button class="modal-close" onclick="closeModal('receipt-modal')">&times;</button>
+      <div class="receipt-box">
+        <div class="receipt-header">
+          <h2>SMART HOSTEL MANAGEMENT SYSTEM</h2>
+          <p style="font-size:0.9rem; color:var(--text-muted);">Official Fee Payment Receipt & Acknowledgment</p>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.9rem;">
+          <div><strong>Receipt No:</strong> <span id="rc-no">REC-2026-001</span></div>
+          <div><strong>Date:</strong> <span id="rc-date">2026-10-08</span></div>
+        </div>
+
+        <div style="background:#f8fafc; padding:1rem; border-radius:6px; margin-bottom:1.5rem; font-size:0.925rem;">
+          <div style="margin-bottom:0.35rem;"><strong>Student Name:</strong> <span id="rc-st-name">Rahul Sharma</span></div>
+          <div style="margin-bottom:0.35rem;"><strong>Roll Number:</strong> <span id="rc-roll">21CS001</span></div>
+          <div style="margin-bottom:0.35rem;"><strong>Room Allocation:</strong> <span id="rc-room">Room A-101</span></div>
+          <div><strong>Branch & Year:</strong> <span id="rc-branch">Computer Science (Year 3)</span></div>
+        </div>
+
+        <table class="table" style="margin-bottom:1.5rem;">
+          <thead>
+            <tr>
+              <th>Item Particulars</th>
+              <th>Total Fee</th>
+              <th>Paid Amount</th>
+              <th>Pending Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hostel Term Fee</td>
+              <td id="rc-total">₹85,000</td>
+              <td id="rc-paid" style="font-weight:700; color:var(--success);">₹85,000</td>
+              <td id="rc-pending">₹0</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; padding-top:1rem; border-top:1px dashed #cbd5e1;">
+          <div><strong>Payment Status:</strong> <span id="rc-status"><span class="badge badge-success">Paid</span></span></div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8rem; color:var(--text-muted);">Authorized Stamp</div>
+            <div style="font-weight:700; color:var(--primary); font-size:0.9rem; margin-top:0.25rem;">Warden Office Verified</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;" class="no-print">
+        <button class="btn btn-primary" onclick="printReceipt()"><i class="fas fa-print"></i> Print / Save PDF</button>
+        <button class="btn btn-outline" onclick="closeModal('receipt-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

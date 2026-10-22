@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | Smart Hostel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="user-info">
+            <h4>Student</h4>
+            <span>STUDENT</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('student_dashboard_page') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('student_profile_page') }}" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="{{ url_for('student_room_page') }}"><i class="fas fa-bed"></i> Room Details</a></li>
+        <li><a href="{{ url_for('student_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Payment</a></li>
+        <li><a href="{{ url_for('student_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('student_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Request</a></li>
+        <li><a href="{{ url_for('student_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Log</a></li>
+        <li><a href="{{ url_for('student_notices_page') }}"><i class="fas fa-bullhorn"></i> Hostel Notices</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Student Profile</h1>
+          <p>Your official college registration records and guardian contact info.</p>
+        </div>
+      </div>
+
+      <div id="profile-alert"></div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        <!-- Academic Details Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-id-card" style="color:var(--primary);"></i> Academic & Registration Details</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <div><strong style="color:var(--text-muted);">Full Name:</strong> <span id="prof-name">-</span></div>
+            <div><strong style="color:var(--text-muted);">Roll Number:</strong> <span id="prof-roll">-</span></div>
+            <div><strong style="color:var(--text-muted);">Academic Branch:</strong> <span id="prof-branch">-</span></div>
+            <div><strong style="color:var(--text-muted);">Academic Year:</strong> <span id="prof-year">-</span></div>
+            <div><strong style="color:var(--text-muted);">Allocated Room:</strong> <span id="prof-room">-</span></div>
+          </div>
+        </div>
+
+        <!-- Guardian Info Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-users" style="color:var(--success);"></i> Parent / Guardian Contact</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <div><strong style="color:var(--text-muted);">Guardian Name:</strong> <span id="prof-parent-name">-</span></div>
+            <div><strong style="color:var(--text-muted);">Guardian Phone:</strong> <span id="prof-parent-phone">-</span></div>
+            <div><strong style="color:var(--text-muted);">Guardian Email:</strong> <span id="prof-parent-email">-</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editable Contact Details Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-user-edit" style="color:var(--accent);"></i> Update Personal Contact Details</h3>
+        </div>
+        <form id="student-profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="text" id="phone" name="phone" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Profile Changes</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

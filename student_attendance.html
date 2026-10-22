@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Log | Smart Hostel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="user-info">
+            <h4>Student</h4>
+            <span>STUDENT</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('student_dashboard_page') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('student_profile_page') }}"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="{{ url_for('student_room_page') }}"><i class="fas fa-bed"></i> Room Details</a></li>
+        <li><a href="{{ url_for('student_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Payment</a></li>
+        <li><a href="{{ url_for('student_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('student_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Request</a></li>
+        <li><a href="{{ url_for('student_attendance_page') }}" class="active"><i class="fas fa-calendar-check"></i> Attendance Log</a></li>
+        <li><a href="{{ url_for('student_notices_page') }}"><i class="fas fa-bullhorn"></i> Hostel Notices</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Attendance Tracking & Log</h1>
+          <p>Biometric scanner roll-call records and hostel Wi-Fi QR check-in options.</p>
+        </div>
+      </div>
+
+      <!-- Attendance Summary Stat Cards -->
+      <div class="grid-stats">
+        <div class="stat-card">
+          <div class="stat-details">
+            <span>Present Days</span>
+            <h2 id="att-summary-present" style="color:var(--success);">0</h2>
+          </div>
+          <div class="stat-icon green"><i class="fas fa-check-double"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-details">
+            <span>Total Tracked Days</span>
+            <h2 id="att-summary-total">0</h2>
+          </div>
+          <div class="stat-icon blue"><i class="fas fa-calendar-alt"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-details">
+            <span>Attendance Rate</span>
+            <h2 id="att-summary-pct" style="color:var(--accent);">100%</h2>
+          </div>
+          <div class="stat-icon cyan"><i class="fas fa-percentage"></i></div>
+        </div>
+      </div>
+
+      <!-- Biometric & QR Verification Banner -->
+      <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h3 style="font-size:1.2rem; color:var(--accent);"><i class="fas fa-qrcode"></i> QR Attendance on Hostel Wi-Fi</h3>
+            <p style="font-size:0.9rem; color:#94a3b8; margin-top:0.25rem;">
+              Primary roll-call is captured via physical Biometric thumbprint scanners at Warden office. If connected to approved hostel Wi-Fi, you can simulate today's QR check-in.
+            </p>
+          </div>
+          <button class="btn btn-primary" onclick="simulateQRAttendance()"><i class="fas fa-qrcode"></i> Check-in via QR Wi-Fi</button>
+        </div>
+      </div>
+
+      <!-- Attendance History Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-list" style="color:var(--primary);"></i> Daily Attendance Log</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Check-in Time</th>
+                <th>Status</th>
+                <th>Verification Mode</th>
+                <th>Logged By</th>
+              </tr>
+            </thead>
+            <tbody id="student-attendance-tbody">
+              <tr><td colspan="5" class="text-muted" style="text-align:center;">Loading attendance logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

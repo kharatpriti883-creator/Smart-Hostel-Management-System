@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}" class="active"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Student Directory Management</h1>
+          <p>Register new students, allocate rooms, edit contact records, and manage hostel enrollments.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-student-modal')">
+          <i class="fas fa-user-plus"></i> Add New Student
+        </button>
+      </div>
+
+      <!-- Search & Filter Card -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+          <div style="flex:1; max-width:400px;">
+            <input type="text" id="student-search-input" class="form-control" placeholder="Search by Student Name, Roll No, or Username...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Students Table Card -->
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Branch & Year</th>
+                <th>Room No</th>
+                <th>Contact Info</th>
+                <th>Fee Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="warden-students-tbody">
+              <tr><td colspan="7" class="text-muted" style="text-align:center;">Loading student directory...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Student Modal -->
+  <div class="modal-overlay" id="add-student-modal">
+    <div class="modal-card" style="max-width: 650px;">
+      <button class="modal-close" onclick="closeModal('add-student-modal')">&times;</button>
+      <h3 style="margin-bottom:1.25rem;"><i class="fas fa-user-plus" style="color:var(--primary);"></i> Register New Hostel Student</h3>
+      
+      <div id="student-modal-alert"></div>
+
+      <form id="add-student-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Student Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Ankit Sharma" required>
+          </div>
+          <div class="form-group">
+            <label for="username">Portal Username</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="e.g. ankit2026" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Initial Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label for="roll_number">College Roll Number</label>
+            <input type="text" id="roll_number" name="roll_number" class="form-control" placeholder="e.g. 21CS099" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="branch">Engineering Branch</label>
+            <input type="text" id="branch" name="branch" class="form-control" placeholder="Computer Science & Engineering" required>
+          </div>
+          <div class="form-group">
+            <label for="year">Academic Year</label>
+            <select id="year" name="year" class="form-control" required>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Student Phone</label>
+            <input type="text" id="phone" name="phone" class="form-control" placeholder="+91 9876543210" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Student Email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="ankit@student.edu" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="parent_name">Parent/Guardian Name</label>
+            <input type="text" id="parent_name" name="parent_name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="parent_phone">Parent Phone</label>
+            <input type="text" id="parent_phone" name="parent_phone" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="parent_email">Parent Email (for leave alerts)</label>
+            <input type="email" id="parent_email" name="parent_email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="add-st-room-select">Initial Room Allocation</label>
+            <select id="add-st-room-select" name="room_id" class="form-control">
+              <option value="">-- Assign Later --</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Student to PostgreSQL</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-student-modal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Allocate Room Modal -->
+  <div class="modal-overlay" id="allocate-room-modal">
+    <div class="modal-card" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeModal('allocate-room-modal')">&times;</button>
+      <h3 style="margin-bottom:1rem;"><i class="fas fa-bed" style="color:var(--primary);"></i> Allocate Hostel Room</h3>
+      
+      <input type="hidden" id="alloc-st-id">
+      <p style="margin-bottom:1rem;">Assigning room for student: <strong id="alloc-st-name">Student</strong></p>
+
+      <div class="form-group">
+        <label for="alloc-room-select">Select Available Room</label>
+        <select id="alloc-room-select" class="form-control">
+          <!-- Dynamically populated -->
+        </select>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn btn-primary" onclick="submitRoomAllocation()"><i class="fas fa-check"></i> Assign Room</button>
+        <button class="btn btn-outline" onclick="closeModal('allocate-room-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

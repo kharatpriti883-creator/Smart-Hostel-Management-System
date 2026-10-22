@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login | Smart Hostel Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+
+  <div class="card" style="width: 100%; max-width: 440px; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.75rem; margin-bottom: 1rem;">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">Student Login</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Access your hostel dashboard, fees & leave desk</p>
+    </div>
+
+    <div id="login-alert"></div>
+
+    <form id="student-login-form">
+      <div class="form-group">
+        <label for="username"><i class="fas fa-user" style="color:var(--text-muted);"></i> Student Username</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="e.g. student1" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label for="password"><i class="fas fa-lock" style="color:var(--text-muted);"></i> Password</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem; margin-top: 0.5rem;">
+        <i class="fas fa-sign-in-alt"></i> Log In to Student Dashboard
+      </button>
+    </form>
+
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+      <p><strong>Demo Credentials:</strong></p>
+      <code>Username: student1 | Password: student123</code>
+      <div style="margin-top: 1rem;">
+        <a href="{{ url_for('warden_login_page') }}" style="color: var(--primary); font-weight: 600;">Are you a Warden? Switch to Warden Login &rarr;</a>
+      </div>
+      <div style="margin-top: 0.5rem;">
+        <a href="{{ url_for('index_page') }}" style="color: var(--text-muted);">&larr; Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

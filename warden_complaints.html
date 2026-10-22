@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grievance Management | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}" class="active"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Student Grievances & Maintenance Desk</h1>
+          <p>Review complaints submitted by residents, update resolution statuses, and add warden remarks.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student & Room</th>
+                <th>Category</th>
+                <th>Title & Fault Description</th>
+                <th>Submitted Date</th>
+                <th>Current Status</th>
+                <th>Warden Response</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="warden-complaints-tbody">
+              <tr><td colspan="7" class="text-muted" style="text-align:center;">Loading grievance complaints...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Update Complaint Modal -->
+  <div class="modal-overlay" id="update-complaint-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeModal('update-complaint-modal')">&times;</button>
+      <h3 style="margin-bottom:1rem;"><i class="fas fa-reply" style="color:var(--primary);"></i> Resolve Grievance Complaint</h3>
+
+      <input type="hidden" id="c-id">
+      <p style="margin-bottom:1rem;">Issue Title: <strong id="c-title">Title</strong></p>
+
+      <div class="form-group">
+        <label for="c-status-select">Resolution Status</label>
+        <select id="c-status-select" class="form-control">
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="c-response-text">Warden Official Response / Technician Remarks</label>
+        <textarea id="c-response-text" class="form-control" rows="3" placeholder="e.g. Electrician dispatched to Room A-101 at 3:00 PM..."></textarea>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn btn-primary" onclick="submitComplaintUpdate()"><i class="fas fa-save"></i> Save Status</button>
+        <button class="btn btn-outline" onclick="closeModal('update-complaint-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

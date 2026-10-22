@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Details | Smart Hostel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="user-info">
+            <h4>Student</h4>
+            <span>STUDENT</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('student_dashboard_page') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('student_profile_page') }}"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="{{ url_for('student_room_page') }}" class="active"><i class="fas fa-bed"></i> Room Details</a></li>
+        <li><a href="{{ url_for('student_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Payment</a></li>
+        <li><a href="{{ url_for('student_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('student_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Request</a></li>
+        <li><a href="{{ url_for('student_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Log</a></li>
+        <li><a href="{{ url_for('student_notices_page') }}"><i class="fas fa-bullhorn"></i> Hostel Notices</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content" id="student-room-details">
+      <div class="page-header">
+        <div>
+          <h1>Allocated Room Details</h1>
+          <p>View your room specifications, capacity, and current room occupants.</p>
+        </div>
+      </div>
+
+      <!-- Room Summary Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-door-open" style="color:var(--primary);"></i> Room Overview</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 1rem;">
+          <div><strong style="color:var(--text-muted);">Room Number:</strong> <h3 id="rm-number" style="color:var(--primary); font-size:1.5rem;">-</h3></div>
+          <div><strong style="color:var(--text-muted);">Hostel Block:</strong> <div id="rm-block" style="font-weight:600;">-</div></div>
+          <div><strong style="color:var(--text-muted);">Floor:</strong> <div id="rm-floor" style="font-weight:600;">-</div></div>
+          <div><strong style="color:var(--text-muted);">Room Category:</strong> <div id="rm-type" style="font-weight:600;">-</div></div>
+          <div><strong style="color:var(--text-muted);">Total Bed Capacity:</strong> <div id="rm-capacity" style="font-weight:600;">-</div></div>
+          <div><strong style="color:var(--text-muted);">Occupied Beds:</strong> <div id="rm-occupied" style="font-weight:600; color:var(--warning);">-</div></div>
+          <div><strong style="color:var(--text-muted);">Available Free Beds:</strong> <div id="rm-available" style="font-weight:600; color:var(--success);">-</div></div>
+        </div>
+      </div>
+
+      <!-- Roommates Table Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-users" style="color:var(--accent);"></i> Room Occupants & Roommates</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Branch</th>
+                <th>Year</th>
+              </tr>
+            </thead>
+            <tbody id="roommates-tbody">
+              <tr><td colspan="4" class="text-muted" style="text-align:center;">Loading room occupants...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grievance & Complaints | Smart Hostel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="user-info">
+            <h4>Student</h4>
+            <span>STUDENT</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('student_dashboard_page') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('student_profile_page') }}"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="{{ url_for('student_room_page') }}"><i class="fas fa-bed"></i> Room Details</a></li>
+        <li><a href="{{ url_for('student_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Payment</a></li>
+        <li><a href="{{ url_for('student_complaints_page') }}" class="active"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('student_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Request</a></li>
+        <li><a href="{{ url_for('student_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Log</a></li>
+        <li><a href="{{ url_for('student_notices_page') }}"><i class="fas fa-bullhorn"></i> Hostel Notices</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Maintenance & Grievance Complaints</h1>
+          <p>Report maintenance issues directly to the Warden office and track resolution progress.</p>
+        </div>
+      </div>
+
+      <div id="complaint-alert"></div>
+
+      <!-- Submit New Complaint Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-plus-circle" style="color:var(--primary);"></i> Submit New Complaint</h3>
+        </div>
+        <form id="complaint-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" name="category" class="form-control" required>
+                <option value="Electrical">Electrical Issue</option>
+                <option value="Water">Water / Plumbing Leakage</option>
+                <option value="Room">Room Furniture / Lock Repair</option>
+                <option value="Maintenance">General Facility Maintenance</option>
+                <option value="Other">Other Issue</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="title">Short Complaint Title</label>
+              <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Bathroom pipe leak in A-101" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Detailed Issue Description</label>
+            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Provide full details regarding the maintenance fault..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Complaint to Warden</button>
+        </form>
+      </div>
+
+      <!-- Submitted Complaints History -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-history" style="color:var(--accent);"></i> Complaint History & Warden Status</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Title & Description</th>
+                <th>Submitted Date</th>
+                <th>Status</th>
+                <th>Warden Remarks / Response</th>
+              </tr>
+            </thead>
+            <tbody id="student-complaints-tbody">
+              <tr><td colspan="5" class="text-muted" style="text-align:center;">Loading complaints...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

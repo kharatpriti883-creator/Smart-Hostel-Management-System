@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Optimization | Warden Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background: var(--accent);"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <h4>Warden Admin</h4>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('warden_dashboard_page') }}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+        <li><a href="{{ url_for('warden_students_page') }}"><i class="fas fa-user-graduate"></i> Student Directory</a></li>
+        <li><a href="{{ url_for('warden_rooms_page') }}"><i class="fas fa-bed"></i> Room Management</a></li>
+        <li><a href="{{ url_for('warden_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Billing</a></li>
+        <li><a href="{{ url_for('warden_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('warden_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Pass Desk</a></li>
+        <li><a href="{{ url_for('warden_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Roster</a></li>
+        <li><a href="{{ url_for('warden_notices_page') }}"><i class="fas fa-bullhorn"></i> Notice Board Manager</a></li>
+        <li><a href="{{ url_for('warden_resources_page') }}" class="active"><i class="fas fa-bolt"></i> Resource Monitor</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Hostel Resource & Utility Optimization Desk</h1>
+          <p>Monitor daily electricity sub-meters, overhead water tank meters, and facility maintenance alerts.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-resource-modal')">
+          <i class="fas fa-plus"></i> Add Utility Meter Log
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Sub-Meter / Utility Name</th>
+                <th>Recorded Reading</th>
+                <th>Status Alert</th>
+                <th>Inspection Remarks</th>
+                <th>Recorded Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="warden-resources-tbody">
+              <tr><td colspan="7" class="text-muted" style="text-align:center;">Loading resource readings...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Resource Modal -->
+  <div class="modal-overlay" id="add-resource-modal">
+    <div class="modal-card" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('add-resource-modal')">&times;</button>
+      <h3 style="margin-bottom:1.25rem;"><i class="fas fa-bolt" style="color:var(--warning);"></i> Add Resource Utility Reading</h3>
+
+      <div id="resource-modal-alert"></div>
+
+      <form id="add-resource-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="resource_type">Resource Type</label>
+            <select id="resource_type" name="resource_type" class="form-control" required>
+              <option value="Electricity">Electricity Meter</option>
+              <option value="Water">Water Storage / Flow</option>
+              <option value="Maintenance">Facility Maintenance Log</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="metric_name">Meter / Location Name</label>
+            <input type="text" id="metric_name" name="metric_name" class="form-control" placeholder="e.g. Block A Sub-meter 1" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="usage_value">Reading Value</label>
+            <input type="number" id="usage_value" name="usage_value" class="form-control" step="0.1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="unit">Unit of Measure</label>
+            <input type="text" id="unit" name="unit" class="form-control" placeholder="kWh / Liters / Units" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Alert Threshold Status</label>
+          <select id="status" name="status" class="form-control" required>
+            <option value="Normal">Normal</option>
+            <option value="High Usage">High Usage Alert</option>
+            <option value="Warning">Warning / Leak Risk</option>
+            <option value="Maintenance Needed">Maintenance Needed</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="remarks">Inspection Remarks</label>
+          <textarea id="remarks" name="remarks" class="form-control" rows="2" placeholder="e.g. Pumping cycle completed; normal pressure observed."></textarea>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Reading</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-resource-modal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Update Resource Reading Modal -->
+  <div class="modal-overlay" id="update-resource-modal">
+    <div class="modal-card" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeModal('update-resource-modal')">&times;</button>
+      <h3 style="margin-bottom:1rem;"><i class="fas fa-edit" style="color:var(--primary);"></i> Update Resource Log</h3>
+
+      <input type="hidden" id="res-id">
+      <p style="margin-bottom:1rem;">Meter: <strong id="res-metric-name">Name</strong></p>
+
+      <div class="form-group">
+        <label for="res-usage-value">Reading Value</label>
+        <input type="number" id="res-usage-value" class="form-control" step="0.1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="res-status-select">Status Alert</label>
+        <select id="res-status-select" class="form-control">
+          <option value="Normal">Normal</option>
+          <option value="High Usage">High Usage</option>
+          <option value="Warning">Warning</option>
+          <option value="Maintenance Needed">Maintenance Needed</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="res-remarks-text">Updated Remarks</label>
+        <textarea id="res-remarks-text" class="form-control" rows="2"></textarea>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn btn-primary" onclick="submitResourceUpdate()"><i class="fas fa-save"></i> Save Updates</button>
+        <button class="btn btn-outline" onclick="closeModal('update-resource-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Notices | Smart Hostel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="user-info">
+            <h4>Student</h4>
+            <span>STUDENT</span>
+          </div>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('student_dashboard_page') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('student_profile_page') }}"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="{{ url_for('student_room_page') }}"><i class="fas fa-bed"></i> Room Details</a></li>
+        <li><a href="{{ url_for('student_fees_page') }}"><i class="fas fa-file-invoice-dollar"></i> Fee Payment</a></li>
+        <li><a href="{{ url_for('student_complaints_page') }}"><i class="fas fa-exclamation-circle"></i> Complaints Desk</a></li>
+        <li><a href="{{ url_for('student_leave_page') }}"><i class="fas fa-envelope-open-text"></i> Leave Request</a></li>
+        <li><a href="{{ url_for('student_attendance_page') }}"><i class="fas fa-calendar-check"></i> Attendance Log</a></li>
+        <li><a href="{{ url_for('student_notices_page') }}" class="active"><i class="fas fa-bullhorn"></i> Hostel Notices</a></li>
+        <li style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #1e293b;">
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Hostel Notice Board</h1>
+          <p>Official announcements, maintenance circulars, and administration guidelines.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-bullhorn" style="color:var(--primary);"></i> Published Announcements</h3>
+        </div>
+        <div id="student-notices-board">
+          <p class="text-muted">Loading notices from database...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const board = document.getElementById('student-notices-board');
+      try {
+        const list = await fetchAPI('/api/notices');
+        if (list.length === 0) {
+          board.innerHTML = '<p class="text-muted">No notices currently published.</p>';
+          return;
+        }
+        board.innerHTML = list.map(n => `
+          <div class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-dark);">${n.title}</h3>
+              <span style="font-size:0.8rem; background:#f1f5f9; padding:0.2rem 0.5rem; border-radius:4px; color:var(--text-muted);"><i class="fas fa-calendar"></i> ${n.date}</span>
+            </div>
+            <p style="color:var(--text-dark); font-size:0.95rem; line-height:1.6;">${n.description}</p>
+          </div>
+        `).join('');
+      } catch(e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>
